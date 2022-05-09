@@ -1,0 +1,182 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-color: #212830;
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        color: aliceblue;
+      }
+      #editor {
+        height: 100%;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+      #stage-grid {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+      }
+      #stage-editor {
+        color: #fff;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+      .grid-line-10 {
+        stroke: #4f5172;
+        opacity: 0.8;
+      }
+      .grid-line-1 {
+        stroke: #41414b;
+        opacity: 0.6;
+      }
+      #drawcomponent {
+        height: 600px;
+        width: 1000px;
+      }
+      #text {
+        margin: 20px;
+      }
+      #container {
+        margin: 50px;
+        border: #4f5172 solid 1px;
+        box-shadow: 8px 8px 24px 0px rgba(0, 0, 0, 0.26);
+        width: 1000px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="text"><a>Menu:</a></div>
+    <div style="margin: 30px;">
+      <button id="circlecreate">Create circle</button>
+    </div>
+
+    <div id="container">
+      <div style="margin: 5px;"><a>View:</a></div>
+      <div id="drawcomponent">
+        <div id="editor">
+          <div id="stage-grid">
+            <svg
+              id="grid"
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <pattern id="pattern1" x="0" y="0" width=".2" height=".2">
+                  <line
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="100%"
+                    class="grid-line-1"
+                  ></line>
+                  <line
+                    x1="0"
+                    y1="0"
+                    x2="100%"
+                    y2="0"
+                    class="grid-line-1"
+                  ></line>
+                </pattern>
+                <pattern id="pattern10" x="0" y="0" width="1" height="1">
+                  <line
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="100%"
+                    class="grid-line-10"
+                  ></line>
+                  <line
+                    x1="0"
+                    y1="0"
+                    x2="100%"
+                    y2="0"
+                    class="grid-line-10"
+                  ></line>
+                </pattern>
+                <pattern
+                  id="gridPattern"
+                  x="0"
+                  y="0"
+                  width="100"
+                  height="100"
+                  patternUnits="userSpaceOnUse"
+                  patternTransform="translate(0,0)"
+                >
+                  <rect
+                    id="gridPatternFill"
+                    fill="url(#pattern1)"
+                    width="100"
+                    height="100"
+                    x="0"
+                    y="0"
+                  ></rect>
+                  <rect
+                    fill="url(#pattern10)"
+                    width="100%"
+                    height="100%"
+                    x="0"
+                    y="0"
+                  ></rect>
+                </pattern>
+              </defs>
+              <rect
+                fill="url(#gridPattern)"
+                width="100%"
+                height="100%"
+                x="0"
+                y="0"
+              ></rect>
+              <g id="crosshairs">
+                <line x1="-100%" x2="100%" y1="0" y2="0"></line>
+                <line x1="0" x2="0" y1="-100%" y2="100%"></line>
+              </g>
+            </svg>
+          </div>
+          <div id="stage-editor">
+            <svg id="stage" viewBox="0 0 1000 600">
+              <g id="world"></g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/Editor.js"></script>
+    <script src="js/Selector.js"></script>
+    <script>
+      const NS = "http://www.w3.org/2000/svg";
+
+      var editor = new Editor(stage);
+      var selector = new Selector(stage);
+
+      var x = 0;
+      var y = 0;
+
+      circlecreate.onclick = () => {
+        var element = document.createElementNS(NS, "circle");
+        element.classList.add("draggable");
+        element.setAttribute("cx", x);
+        element.setAttribute("cy", y);
+        element.setAttribute("r", 64);
+        element.style.stroke = "black";
+        element.style.fill = "white";
+
+        x += 128;
+        y += 128;
+        stage.children["world"].append(element);
+      };
+    </script>
+  </body>
+</html>
