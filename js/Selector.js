@@ -90,7 +90,7 @@ class Selector {
           pos.y = at.y - (at.y - pos.y) * amount;
 
           document.getElementById("consola").innerText = pos.x + "; " + pos.y;
-          dirty = true;
+          //dirty = true;
         },
         getScale() {
           return scale;
