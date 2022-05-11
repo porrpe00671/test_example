@@ -31,8 +31,11 @@ class Selector {
     var is_touch_device = "ontouchstart" in document.documentElement;
     var margin = stage.getClientRects()[0];
 
+    document.getElementById("consola").innerText = margin.x + ";" + margin.y;
+
     window.onresize = () => {
       margin = stage.getClientRects()[0];
+      document.getElementById("consola").innerText = margin.x + ";" + margin.y;
     };
 
     const view = (() => {
@@ -198,7 +201,6 @@ class Selector {
       if (center === null) return;
 
       zoomScale = current - last > 0 ? 1.025 : 1 / 1.025;
-      document.getElementById("consola").innerText = center.x + ";" + center.y;
       view.scaleAt({ x: center.x, y: center.y }, zoomScale);
       view.applyTo(world);
       zoomGrid();
