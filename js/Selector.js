@@ -90,7 +90,7 @@ class Selector {
           pos.y = at.y - (at.y - pos.y) * amount;
 
           document.getElementById("consola").innerText = pos.x + "; " + pos.y;
-          //dirty = true;
+          dirty = true;
         },
         getScale() {
           return scale;
@@ -132,19 +132,26 @@ class Selector {
       }
     });
 
-    mc.on("pan pinch", function (ev) {
-      mouse.oldX = mouse.x;
-      mouse.oldY = mouse.y;
-      mouse.x = ev.deltaX;
-      mouse.y = ev.deltaY;
+    var last = 0;
+    var current = 0;
 
-      view.scaleAtt(
-        { x: mouse.x - mouse.oldX, y: mouse.y - mouse.oldY },
-        ev.scale
-      );
-      //view.applyTo(world);
+    mc.on("pinch", function (ev) {
+      last = current;
+      current = ev.scale;
+
+      zoomScale = current - last > 0 ? 1.1 : 1 / 1.1;
+      var p = stage.createSVGPoint();
+      p.x = ev.center.x;
+      p.y = ev.center.y;
+
+      p = p.matrixTransform(stage.getCTM().inverse());
+
+      view.scaleAt({ x: p.x, y: p.y }, zoomScale);
+      view.applyTo(world);
       //zoomGrid();
       //panGrid(view.getPosition());
+
+      //updateSelection(SelectedObject.selected);
     });
     mc.on("pressup", function (ev) {
       //console.log("pressup");
