@@ -88,6 +88,8 @@ class Selector {
           scale = amount;
           pos.x = at.x - (at.x - pos.x) * amount;
           pos.y = at.y - (at.y - pos.y) * amount;
+
+          document.getElementById("consola").innerText = pos.x + "; " + pos.y;
           dirty = true;
         },
         getScale() {
@@ -137,7 +139,7 @@ class Selector {
       mouse.y = ev.deltaY;
 
       scaleAtt({ x: mouse.x - mouse.oldX, y: mouse.y - mouse.oldY }, ev.scale);
-      view.applyTo(world);
+      //view.applyTo(world);
       //zoomGrid();
       //panGrid(view.getPosition());
     });
