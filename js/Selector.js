@@ -120,10 +120,14 @@ class Selector {
       }
     });
 
+    var lastScale = 0;
+    var CurrentScale = 0;
     mc.on("pinch", function (ev) {
-      document.getElementById("consola").innerText = ev.scale;
-      //console.log(ev.scale);
+      lastScale = CurrentScale;
+      CurrentScale = ev.scale;
+      document.getElementById("consola").innerText = CurrentScale - lastScale;
     });
+
     mc.on("pressup", function (ev) {
       //console.log("pressup");
     });
