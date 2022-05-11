@@ -121,6 +121,7 @@ class Selector {
     });
 
     mc.on("pinch", function (ev) {
+      console.textContent = "huj";
       //console.log(ev.scale);
     });
     mc.on("pressup", function (ev) {
