@@ -80,12 +80,14 @@ class Selector {
           pos.y = at.y - (at.y - pos.y) * amount;
           dirty = true;
         },
-        scaleSet(amount) {
+        scaleAtt(at, amount) {
           // at in screen coords
           if (dirty) {
             this.update();
           }
           scale = amount;
+          pos.x = at.x - (at.x - pos.x) * amount;
+          pos.y = at.y - (at.y - pos.y) * amount;
           dirty = true;
         },
         getScale() {
@@ -128,11 +130,16 @@ class Selector {
       }
     });
 
-    mc.on("pinch", function (ev) {
-      scaleSet(ev.scale);
+    mc.on("pan pinch", function (ev) {
+      mouse.oldX = mouse.x;
+      mouse.oldY = mouse.y;
+      mouse.x = ev.deltaX;
+      mouse.y = ev.deltaY;
+
+      scaleAtt({ x: mouse.x - mouse.oldX, y: mouse.y - mouse.oldY }, ev.scale);
       view.applyTo(world);
-      zoomGrid();
-      panGrid(view.getPosition());
+      //zoomGrid();
+      //panGrid(view.getPosition());
     });
     mc.on("pressup", function (ev) {
       //console.log("pressup");
