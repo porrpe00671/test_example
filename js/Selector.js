@@ -125,7 +125,7 @@ class Selector {
       //console.log(ev.scale);
     });
     mc.on("pressup", function (ev) {
-      console.textContent = "huj";
+      console.innerText = "huj";
       //console.log("pressup");
     });
     mc.on("panend", function (ev) {
