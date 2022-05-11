@@ -1,31 +1,33 @@
 class Selector {
   constructor(stage) {
     var zoomScale = 1;
-    var selection = document.createElement("span");
-    selection.style.position = "absolute";
-    selection.style.display = "block";
-    selection.style.outline = "solid 2px #00ff76";
-    selection.style.pointerEvents = "none";
-    document.body.appendChild(selection);
 
     function updateSelection(element) {
+      if (selection == null) return;
+
       if (element == null) {
         selection.style.display = "none";
         return;
       }
-      if (element.isSameNode(stage)) {
+
+      if (element.classList[0] != "draggable") return;
+
+      if (element.isSameNode(stage) && selection != null) {
         selection.style.display = "none";
         return;
       }
 
-      var rect = element.getBoundingClientRect();
-
-      selection.style.left = rect.left + "px";
-      selection.style.top = rect.top + "px";
-      selection.style.width = rect.width + "px";
-      selection.style.height = rect.height + "px";
-
       selection.style.display = "block";
+
+      var _stage = stage.getClientRects()[0];
+      var rect = element.getClientRects()[0];
+      var offsetX = rect.x - _stage.x;
+      var offsetY = rect.y - _stage.y;
+
+      if (offsetX != null) selection.setAttribute("x", offsetX);
+      if (offsetY != null) selection.setAttribute("y", offsetY);
+      if (rect.width != null) selection.setAttribute("width", rect.width);
+      if (rect.height != null) selection.setAttribute("height", rect.height);
     }
 
     const view = (() => {

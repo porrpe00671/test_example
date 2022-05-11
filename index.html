@@ -60,7 +60,7 @@
     </style>
   </head>
   <body>
-    <div id="consola">v1.3</div>
+    <div id="consola">v1.1</div>
     <div id="text"><a>Menu:</a></div>
     <div style="margin: 30px;">
       <button id="circlecreate">Create circle</button>
@@ -152,6 +152,7 @@
           <div id="stage-editor">
             <svg id="stage" viewBox="0 0 600 300">
               <g id="world"></g>
+              <g id="overworld"></g>
             </svg>
           </div>
         </div>
@@ -168,6 +169,18 @@
 
       var x = 0;
       var y = 0;
+
+      var selection = document.createElementNS(NS, "rect");
+      selection.id = "selection";
+      selection.style.stroke = "#00ff76";
+      selection.style.strokeWidth = "2px";
+      selection.style.fill = "none";
+      selection.setAttribute("rx", 2);
+      selection.setAttribute("x", 0);
+      selection.setAttribute("y", 0);
+      selection.setAttribute("width", 0);
+      selection.setAttribute("height", 0);
+      stage.children["overworld"].append(selection);
 
       circlecreate.onclick = () => {
         var element = document.createElementNS(NS, "circle");
