@@ -41,7 +41,20 @@ class Selector {
 
     window.onresize = () => {
       margin = stage.getClientRects()[0];
-      document.getElementById("consola").innerText = margin.x + ";" + margin.y;
+      document.getElementById("consola").innerText =
+        margin.x + ";" + margin.y + ";" + window.visualViewport.scale;
+    };
+
+    window.visualViewport.onscroll = () => {
+      margin = stage.getClientRects()[0];
+      document.getElementById("consola").innerText =
+        margin.x + ";" + margin.y + ";" + window.visualViewport.scale;
+    };
+
+    window.onscroll = () => {
+      margin = stage.getClientRects()[0];
+      document.getElementById("consola").innerText =
+        margin.x + ";" + margin.y + ";" + window.visualViewport.scale;
     };
 
     const view = (() => {
