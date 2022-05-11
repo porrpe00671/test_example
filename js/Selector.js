@@ -80,18 +80,6 @@ class Selector {
           pos.y = at.y - (at.y - pos.y) * amount;
           dirty = true;
         },
-        scaleAtt(at, amount) {
-          // at in screen coords
-          if (dirty) {
-            this.update();
-          }
-          scale = amount;
-          pos.x = at.x - (at.x - pos.x) * amount;
-          pos.y = at.y - (at.y - pos.y) * amount;
-
-          document.getElementById("consola").innerText = pos.x + "; " + pos.y;
-          dirty = true;
-        },
         getScale() {
           return scale;
         },
@@ -138,17 +126,19 @@ class Selector {
     mc.on("pinch", function (ev) {
       last = current;
       current = ev.scale;
-      zoomScale = current - last > 0 ? 1.01 : 1 / 1.01;
-      var p = stage.createSVGPoint();
+
+      zoomScale = current - last > 0 ? 1.02 : 1 / 1.02;
+
+      var p = { x: 0, y: 0 };
       p.x = ev.center.x;
       p.y = ev.center.y;
-
-      p = p.matrixTransform(stage.getCTM().inverse());
 
       view.scaleAt({ x: p.x, y: p.y }, zoomScale);
       view.applyTo(world);
       zoomGrid();
       panGrid(view.getPosition());
+
+      updateSelection(SelectedObject.selected);
     });
     mc.on("pressup", function (ev) {
       //console.log("pressup");
@@ -217,11 +207,9 @@ class Selector {
       var delta = event.wheelDeltaY;
       zoomScale = delta > 0 ? 1.1 : 1 / 1.1;
 
-      var p = stage.createSVGPoint();
+      var p = { x: 0, y: 0 };
       p.x = event.clientX - margin.left;
       p.y = event.clientY - margin.top;
-
-      p = p.matrixTransform(stage.getCTM().inverse());
 
       view.scaleAt({ x: p.x, y: p.y }, zoomScale);
       view.applyTo(world);
