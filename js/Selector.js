@@ -33,6 +33,11 @@ class Selector {
 
     document.getElementById("consola").innerText = margin.x + ";" + margin.y;
 
+    window.visualViewport.addEventListener("resize", viewportHandler);
+    function viewportHandler(event) {
+      margin = stage.getClientRects()[0];
+    }
+
     window.onresize = () => {
       margin = stage.getClientRects()[0];
       document.getElementById("consola").innerText = margin.x + ";" + margin.y;
