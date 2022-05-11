@@ -91,7 +91,7 @@ class Selector {
     })();
 
     var margin = stage.getBoundingClientRect();
-    view.pan({ x: 500, y: 300 });
+    view.pan({ x: 300, y: 150 });
     view.applyTo(world);
     initGrid();
 
