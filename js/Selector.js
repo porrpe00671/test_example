@@ -126,6 +126,8 @@ class Selector {
 
     mc.on("pinchstart", function (ev) {
       center = ev.center;
+      center.x -= margin.left;
+      center.y -= margin.top;
     });
 
     mc.on("pinchend", function (ev) {
