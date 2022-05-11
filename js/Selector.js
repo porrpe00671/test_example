@@ -121,15 +121,15 @@ class Selector {
     });
 
     mc.on("pinch", function (ev) {
-      console.textContent = "huj";
+      consola.textContent = "huj";
       //console.log(ev.scale);
     });
     mc.on("pressup", function (ev) {
-      console.innerText = "huj";
+      consola.innerText = "huj";
       //console.log("pressup");
     });
     mc.on("panend", function (ev) {
-      console.innerText = "huj";
+      consola.innerText = "huj";
       mouse.button = false;
     });
 
