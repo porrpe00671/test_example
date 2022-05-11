@@ -80,6 +80,14 @@ class Selector {
           pos.y = at.y - (at.y - pos.y) * amount;
           dirty = true;
         },
+        scaleSet(amount) {
+          // at in screen coords
+          if (dirty) {
+            this.update();
+          }
+          scale = amount;
+          dirty = true;
+        },
         getScale() {
           return scale;
         },
@@ -120,14 +128,12 @@ class Selector {
       }
     });
 
-    var lastScale = 0;
-    var CurrentScale = 0;
     mc.on("pinch", function (ev) {
-      lastScale = CurrentScale;
-      CurrentScale = ev.scale;
-      document.getElementById("consola").innerText = CurrentScale;
+      scaleSet(ev.scale);
+      view.applyTo(world);
+      zoomGrid();
+      panGrid(view.getPosition());
     });
-
     mc.on("pressup", function (ev) {
       //console.log("pressup");
     });
