@@ -18,17 +18,22 @@ class Selector {
       }
 
       selection.style.display = "block";
-
-      var _stage = stage.getClientRects()[0];
       var rect = element.getClientRects()[0];
-      var offsetX = rect.x - _stage.x;
-      var offsetY = rect.y - _stage.y;
+      var offsetX = rect.x - margin.x;
+      var offsetY = rect.y - margin.y;
 
       if (offsetX != null) selection.setAttribute("x", offsetX);
       if (offsetY != null) selection.setAttribute("y", offsetY);
       if (rect.width != null) selection.setAttribute("width", rect.width);
       if (rect.height != null) selection.setAttribute("height", rect.height);
     }
+
+    var is_touch_device = "ontouchstart" in document.documentElement;
+    var margin = stage.getClientRects()[0];
+
+    window.onresize = () => {
+      margin = stage.getClientRects()[0];
+    };
 
     const view = (() => {
       const matrix = [1, 0, 0, 1, 0, 0]; // current view transform
@@ -92,8 +97,6 @@ class Selector {
       return API;
     })();
 
-    var is_touch_device = "ontouchstart" in document.documentElement;
-    var margin = stage.getBoundingClientRect();
     view.pan({ x: 300, y: 150 });
     view.applyTo(world);
     initGrid();
@@ -163,8 +166,8 @@ class Selector {
     mc.on("pinchstart", function (ev) {
       if (!is_touch_device) return;
       center = ev.center;
-      center.x -= margin.left;
-      center.y -= margin.top;
+      center.x -= margin.x;
+      center.y -= margin.y;
       SelectedObject.selected = null;
     });
     var reset = () => {
@@ -254,8 +257,8 @@ class Selector {
 
       mouse.oldX = mouse.x;
       mouse.oldY = mouse.y;
-      mouse.x = event.pageX - margin.left;
-      mouse.y = event.pageY - margin.top;
+      mouse.x = event.pageX - margin.x;
+      mouse.y = event.pageY - margin.y;
 
       if (SelectedObject.selected != null) {
         SelectedObject.cx = Math.ceil(
@@ -288,8 +291,8 @@ class Selector {
       zoomScale = delta > 0 ? 1.1 : 1 / 1.1;
 
       var p = { x: 0, y: 0 };
-      p.x = event.clientX - margin.left;
-      p.y = event.clientY - margin.top;
+      p.x = event.clientX - margin.x;
+      p.y = event.clientY - margin.y;
 
       view.scaleAt({ x: p.x, y: p.y }, zoomScale);
       view.applyTo(world);
@@ -327,7 +330,7 @@ class Selector {
       );
       crosshairs.setAttribute(
         "transform",
-        "translate(" + (p.x + margin.left) + "," + (p.y + margin.top) + ")"
+        "translate(" + (p.x + margin.x) + "," + (p.y + margin.y) + ")"
       );
     }
     function initGrid() {
