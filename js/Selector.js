@@ -133,6 +133,8 @@ class Selector {
       p.x = ev.center.x;
       p.y = ev.center.y;
 
+      document.getElementById("consola").innerText = p.x + ";" + p.y;
+
       view.scaleAt({ x: p.x, y: p.y }, zoomScale);
       view.applyTo(world);
       zoomGrid();
