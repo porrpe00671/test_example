@@ -138,7 +138,10 @@ class Selector {
       mouse.x = ev.deltaX;
       mouse.y = ev.deltaY;
 
-      scaleAtt({ x: mouse.x - mouse.oldX, y: mouse.y - mouse.oldY }, ev.scale);
+      view.scaleAtt(
+        { x: mouse.x - mouse.oldX, y: mouse.y - mouse.oldY },
+        ev.scale
+      );
       //view.applyTo(world);
       //zoomGrid();
       //panGrid(view.getPosition());
