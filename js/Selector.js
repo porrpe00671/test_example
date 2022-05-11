@@ -95,6 +95,41 @@ class Selector {
     view.applyTo(world);
     initGrid();
 
+    var myElement = document.getElementById("editor");
+    var mc = new Hammer.Manager(myElement);
+    var pinch = new Hammer.Pinch();
+    var pan = new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 });
+    var press = new Hammer.Press({ time: 50 });
+
+    mc.add([pinch, pan, press]);
+
+    mc.on("pan", function (ev) {
+      mouse.oldX = mouse.x;
+      mouse.oldY = mouse.y;
+      mouse.x = ev.deltaX;
+      mouse.y = ev.deltaY;
+
+      if (SelectedObject.selected == null) {
+        if (mouse.button) {
+          view.pan({ x: mouse.x - mouse.oldX, y: mouse.y - mouse.oldY });
+          view.applyTo(world);
+          panGrid(view.getPosition());
+        } else {
+          mouse.button = true;
+        }
+      }
+    });
+
+    mc.on("pinch", function (ev) {
+      console.log(ev.scale);
+    });
+    mc.on("pressup", function (ev) {
+      //console.log("pressup");
+    });
+    mc.on("panend", function (ev) {
+      mouse.button = false;
+    });
+
     window.addEventListener("mousemove", mouseEvent, { passive: false });
     window.addEventListener("mousedown", mouseEvent, { passive: false });
     window.addEventListener("mouseup", mouseEvent, { passive: false });
@@ -179,7 +214,6 @@ class Selector {
       while (view.getScale() * gridScale > 120) {
         gridScale /= 5;
       }
-      console.log(view.getScale());
       return gridScale;
     }
     function zoomGrid() {
