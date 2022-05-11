@@ -104,7 +104,26 @@ class Selector {
 
     mc.add([pinch, pan, press]);
 
-    mc.on("pan", function (ev) {
+    mc.on("panstart", function (ev) {
+      if (!is_touch_device) return;
+      reset();
+      if (ev.target.classList[0] == "draggable") {
+        SelectedObject.selected = ev.target;
+        SelectedObject.cx = parseFloat(
+          SelectedObject.selected.getAttribute("cx")
+        );
+        SelectedObject.cy = parseFloat(
+          SelectedObject.selected.getAttribute("cy")
+        );
+      } else mouse.button = true;
+      updateSelection(SelectedObject.selected);
+    });
+    mc.on("panend", function (ev) {
+      if (!is_touch_device) return;
+      reset();
+      updateSelection(SelectedObject.selected);
+    });
+    mc.on("panmove", function (ev) {
       if (!is_touch_device) return;
 
       mouse.oldX = mouse.x;
@@ -117,8 +136,6 @@ class Selector {
           view.pan({ x: mouse.x - mouse.oldX, y: mouse.y - mouse.oldY });
           view.applyTo(world);
           panGrid(view.getPosition());
-        } else {
-          mouse.button = true;
         }
       } else {
         SelectedObject.cx = Math.ceil(
@@ -132,9 +149,9 @@ class Selector {
 
         SelectedObject.selected.setAttributeNS(null, "cx", SelectedObject.cx);
         SelectedObject.selected.setAttributeNS(null, "cy", SelectedObject.cy);
-
-        updateSelection(SelectedObject.selected);
       }
+
+      updateSelection(SelectedObject.selected);
     });
 
     var last = 0;
@@ -146,8 +163,8 @@ class Selector {
       center = ev.center;
       center.x -= margin.left;
       center.y -= margin.top;
+      SelectedObject.selected = null;
     });
-
     var reset = () => {
       mouse.button = false;
       center = null;
@@ -164,12 +181,10 @@ class Selector {
       SelectedObject.cx = 0;
       SelectedObject.cy = 0;
     };
-
     mc.on("pinchend", function (ev) {
       if (!is_touch_device) return;
       reset();
     });
-
     mc.on("pinch", function (ev) {
       if (!is_touch_device) return;
       last = current;
@@ -184,24 +199,24 @@ class Selector {
       zoomGrid();
       panGrid(view.getPosition());
 
-      updateSelection(SelectedObject.selected);
+      SelectedObject.selected = null;
     });
     mc.on("press", function (ev) {
       if (!is_touch_device) return;
-      SelectedObject.selected = ev.target;
-      SelectedObject.cx = parseFloat(
-        SelectedObject.selected.getAttribute("cx")
-      );
-      SelectedObject.cy = parseFloat(
-        SelectedObject.selected.getAttribute("cy")
-      );
-      updateSelection(SelectedObject.selected);
+      SelectedObject.selected = null;
+      if (ev.target.classList[0] == "draggable") {
+        SelectedObject.selected = ev.target;
+        SelectedObject.cx = parseFloat(
+          SelectedObject.selected.getAttribute("cx")
+        );
+        SelectedObject.cy = parseFloat(
+          SelectedObject.selected.getAttribute("cy")
+        );
+
+        updateSelection(SelectedObject.selected);
+      }
     });
     mc.on("pressup", function (ev) {
-      if (!is_touch_device) return;
-      reset();
-    });
-    mc.on("panend", function (ev) {
       if (!is_touch_device) return;
       reset();
     });
