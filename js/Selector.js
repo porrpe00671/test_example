@@ -90,6 +90,7 @@ class Selector {
       return API;
     })();
 
+    var is_touch_device = "ontouchstart" in document.documentElement;
     var margin = stage.getBoundingClientRect();
     view.pan({ x: 300, y: 150 });
     view.applyTo(world);
@@ -104,6 +105,8 @@ class Selector {
     mc.add([pinch, pan, press]);
 
     mc.on("pan", function (ev) {
+      if (!is_touch_device) return;
+
       mouse.oldX = mouse.x;
       mouse.oldY = mouse.y;
       mouse.x = ev.deltaX;
@@ -117,6 +120,20 @@ class Selector {
         } else {
           mouse.button = true;
         }
+      } else {
+        SelectedObject.cx = Math.ceil(
+          parseFloat(SelectedObject.selected.getAttribute("cx")) +
+            (mouse.x - mouse.oldX) / view.getScale()
+        );
+        SelectedObject.cy = Math.ceil(
+          parseFloat(SelectedObject.selected.getAttribute("cy")) +
+            (mouse.y - mouse.oldY) / view.getScale()
+        );
+
+        SelectedObject.selected.setAttributeNS(null, "cx", SelectedObject.cx);
+        SelectedObject.selected.setAttributeNS(null, "cy", SelectedObject.cy);
+
+        updateSelection(SelectedObject.selected);
       }
     });
 
@@ -125,16 +142,36 @@ class Selector {
     var center = null;
 
     mc.on("pinchstart", function (ev) {
+      if (!is_touch_device) return;
       center = ev.center;
       center.x -= margin.left;
       center.y -= margin.top;
     });
 
-    mc.on("pinchend", function (ev) {
+    var reset = () => {
+      mouse.button = false;
       center = null;
+      last = 0;
+      current = 0;
+
+      SelectedObject.selected = null;
+
+      mouse.oldX = 0;
+      mouse.oldY = 0;
+      mouse.x = 0;
+      mouse.y = 0;
+
+      SelectedObject.cx = 0;
+      SelectedObject.cy = 0;
+    };
+
+    mc.on("pinchend", function (ev) {
+      if (!is_touch_device) return;
+      reset();
     });
 
     mc.on("pinch", function (ev) {
+      if (!is_touch_device) return;
       last = current;
       current = ev.scale;
 
@@ -149,11 +186,24 @@ class Selector {
 
       updateSelection(SelectedObject.selected);
     });
+    mc.on("press", function (ev) {
+      if (!is_touch_device) return;
+      SelectedObject.selected = ev.target;
+      SelectedObject.cx = parseFloat(
+        SelectedObject.selected.getAttribute("cx")
+      );
+      SelectedObject.cy = parseFloat(
+        SelectedObject.selected.getAttribute("cy")
+      );
+      updateSelection(SelectedObject.selected);
+    });
     mc.on("pressup", function (ev) {
-      //console.log("pressup");
+      if (!is_touch_device) return;
+      reset();
     });
     mc.on("panend", function (ev) {
-      mouse.button = false;
+      if (!is_touch_device) return;
+      reset();
     });
 
     window.addEventListener("mousemove", mouseEvent, { passive: false });
@@ -164,7 +214,10 @@ class Selector {
     const SelectedObject = { cx: 0, cy: 0, selected: null };
     const mouse = { x: 0, y: 0, oldX: 0, oldY: 0, button: false };
 
+    //mouse pan
     function mouseEvent(event) {
+      if (is_touch_device) return;
+
       if (event.type === "mousedown" && event.button == 0) {
         SelectedObject.selected = event.target;
         SelectedObject.cx = parseFloat(
@@ -212,6 +265,7 @@ class Selector {
       event.preventDefault();
     }
 
+    //mouse zoom
     function mouseWheelEvent(event) {
       var delta = event.wheelDeltaY;
       zoomScale = delta > 0 ? 1.1 : 1 / 1.1;
@@ -230,6 +284,7 @@ class Selector {
       event.preventDefault();
     }
 
+    //Grid
     function getGridScale() {
       var gridScale = 1;
       while (view.getScale() * gridScale < 8) {
