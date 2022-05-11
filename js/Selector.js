@@ -138,8 +138,7 @@ class Selector {
     mc.on("pinch", function (ev) {
       last = current;
       current = ev.scale;
-
-      zoomScale = current - last > 0 ? 1.1 : 1 / 1.1;
+      zoomScale = current - last > 0 ? 1.01 : 1 / 1.01;
       var p = stage.createSVGPoint();
       p.x = ev.center.x;
       p.y = ev.center.y;
@@ -148,10 +147,8 @@ class Selector {
 
       view.scaleAt({ x: p.x, y: p.y }, zoomScale);
       view.applyTo(world);
-      //zoomGrid();
-      //panGrid(view.getPosition());
-
-      //updateSelection(SelectedObject.selected);
+      zoomGrid();
+      panGrid(view.getPosition());
     });
     mc.on("pressup", function (ev) {
       //console.log("pressup");
