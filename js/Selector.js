@@ -18,6 +18,7 @@ class Selector {
       }
 
       selection.style.display = "block";
+      margin = stage.getClientRects()[0];
       var rect = element.getClientRects()[0];
       var offsetX = rect.x - margin.x;
       var offsetY = rect.y - margin.y;
@@ -30,32 +31,6 @@ class Selector {
 
     var is_touch_device = "ontouchstart" in document.documentElement;
     var margin = stage.getClientRects()[0];
-
-    document.getElementById("consola").innerText = margin.x + ";" + margin.y;
-
-    window.visualViewport.onresize = () => {
-      margin = stage.getClientRects()[0];
-      document.getElementById("consola").innerText =
-        margin.x + ";" + margin.y + ";" + window.visualViewport.scale;
-    };
-
-    window.onresize = () => {
-      margin = stage.getClientRects()[0];
-      document.getElementById("consola").innerText =
-        margin.x + ";" + margin.y + ";" + window.visualViewport.scale;
-    };
-
-    window.visualViewport.onscroll = () => {
-      margin = stage.getClientRects()[0];
-      document.getElementById("consola").innerText =
-        margin.x + ";" + margin.y + ";" + window.visualViewport.scale;
-    };
-
-    window.onscroll = () => {
-      margin = stage.getClientRects()[0];
-      document.getElementById("consola").innerText =
-        margin.x + ";" + margin.y + ";" + window.visualViewport.scale;
-    };
 
     const view = (() => {
       const matrix = [1, 0, 0, 1, 0, 0]; // current view transform
@@ -187,6 +162,7 @@ class Selector {
 
     mc.on("pinchstart", function (ev) {
       if (!is_touch_device) return;
+      margin = stage.getClientRects()[0];
       center = ev.center;
       center.x -= margin.x;
       center.y -= margin.y;
@@ -275,7 +251,7 @@ class Selector {
         mouse.button = false;
         SelectedObject.selected = null;
       }
-
+      margin = stage.getClientRects()[0];
       mouse.oldX = mouse.x;
       mouse.oldY = mouse.y;
       mouse.x = event.pageX - margin.x;
@@ -308,6 +284,7 @@ class Selector {
 
     //mouse zoom
     function mouseWheelEvent(event) {
+      margin = stage.getClientRects()[0];
       var delta = event.wheelDeltaY;
       zoomScale = delta > 0 ? 1.1 : 1 / 1.1;
 
@@ -344,6 +321,7 @@ class Selector {
       gridPatternFill.setAttribute("height", gridScale / 2);
     }
     function panGrid(p) {
+      margin = stage.getClientRects()[0];
       if (p.x == undefined || p.y == undefined) return;
       gridPattern.setAttribute(
         "patternTransform",
