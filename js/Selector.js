@@ -129,6 +129,7 @@ class Selector {
       //console.log("pressup");
     });
     mc.on("panend", function (ev) {
+      console.innerText = "huj";
       mouse.button = false;
     });
 
