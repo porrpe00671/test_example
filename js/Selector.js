@@ -125,7 +125,8 @@ class Selector {
     mc.on("pinch", function (ev) {
       lastScale = CurrentScale;
       CurrentScale = ev.scale;
-      document.getElementById("consola").innerText = CurrentScale - lastScale;
+      document.getElementById("consola").innerText =
+        ":" + (CurrentScale - lastScale);
     });
 
     mc.on("pressup", function (ev) {
