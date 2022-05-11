@@ -122,20 +122,25 @@ class Selector {
 
     var last = 0;
     var current = 0;
+    var center = null;
+
+    mc.on("pinchstart", function (ev) {
+      center = ev.center;
+    });
+
+    mc.on("pinchend", function (ev) {
+      center = null;
+    });
 
     mc.on("pinch", function (ev) {
       last = current;
       current = ev.scale;
 
+      if (center === null) return;
+
       zoomScale = current - last > 0 ? 1.025 : 1 / 1.025;
-
-      var p = { x: 0, y: 0 };
-      p.x = ev.center.x;
-      p.y = ev.center.y;
-
-      document.getElementById("consola").innerText = p.x + ";" + p.y;
-
-      view.scaleAt({ x: p.x, y: p.y }, zoomScale);
+      document.getElementById("consola").innerText = center.x + ";" + center.y;
+      view.scaleAt({ x: center.x, y: center.y }, zoomScale);
       view.applyTo(world);
       zoomGrid();
       panGrid(view.getPosition());
