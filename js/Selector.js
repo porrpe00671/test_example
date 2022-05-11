@@ -127,7 +127,7 @@ class Selector {
       last = current;
       current = ev.scale;
 
-      zoomScale = current - last > 0 ? 1.02 : 1 / 1.02;
+      zoomScale = current - last > 0 ? 1.05 : 1 / 1.05;
 
       var p = { x: 0, y: 0 };
       p.x = ev.center.x;
